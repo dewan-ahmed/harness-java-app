@@ -18,15 +18,24 @@ public class DynamicMatrixTest {
         List<DynamicTest> tests = new ArrayList<>();
         // Generate 1200 passing tests; each sleeps to simulate work
         IntStream.range(0, 1200).forEach(i -> {
-            tests.add(DynamicTest.dynamicTest("case-" + i, () -> {
-                assertEquals(i, i);
-                assertTrue(i >= 0);
-                assertNotNull("ok");
-                try { Thread.sleep(SLEEP_MS); } catch (InterruptedException ignored) {}
+            final String displayName = "com.demo.DynamicMatrixTest.case-" + i;
+            tests.add(DynamicTest.dynamicTest(displayName, () -> {
+                System.out.println("Running " + displayName + "...");
+                try {
+                    assertEquals(i, i);
+                    assertTrue(i >= 0);
+                    assertNotNull("ok");
+                    try {
+                        Thread.sleep(SLEEP_MS);
+                    } catch (InterruptedException ignored) {
+                    }
+                    System.out.println("PASS " + displayName);
+                } catch (AssertionError e) {
+                    System.out.println("FAIL " + displayName + ": " + e.getMessage());
+                    throw e;
+                }
             }));
         });
         return tests.stream();
     }
 }
-
-
