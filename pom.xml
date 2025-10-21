@@ -7,15 +7,25 @@
     <groupId>com.demo</groupId>
     <artifactId>harness-java-app</artifactId>
     <version>1.0.0</version>
-    <name>Harness Java App</name>
-    <description>Vanilla Java 17 demo app with 1200 tests</description>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+    <name>Harness Java App - Parent</name>
+    <description>Multi-module Java 17 demo app with 1200 tests</description>
+
+    <modules>
+        <module>app</module>
+        <module>mod-a</module>
+        <module>mod-b</module>
+    </modules>
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <junit.version>5.10.2</junit.version>
+        <gmavenplus.version>3.0.2</gmavenplus.version>
+        <buildhelper.version>3.5.0</buildhelper.version>
+        <surefire.version>3.2.5</surefire.version>
+        <compiler.version>3.11.0</compiler.version>
     </properties>
 
     <dependencies>
@@ -28,44 +38,54 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${compiler.version}</version>
+                    <configuration>
+                        <release>${maven.compiler.release}</release>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${surefire.version}</version>
+                    <configuration>
+                        <useModulePath>false</useModulePath>
+                        <useFile>false</useFile>
+                        <redirectTestOutputToFile>false</redirectTestOutputToFile>
+                        <printSummary>true</printSummary>
+                        <reportFormat>brief</reportFormat>
+                        <forkCount>1</forkCount>
+                        <reuseForks>true</reuseForks>
+                        <includes>
+                            <include>**/*Test.java</include>
+                            <include>**/*Tests.java</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.gmavenplus</groupId>
+                    <artifactId>gmavenplus-plugin</artifactId>
+                    <version>${gmavenplus.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${buildhelper.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-                <configuration>
-                    <release>17</release>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
-                <configuration>
-                    <useModulePath>false</useModulePath>
-                    <useFile>false</useFile>
-                    <redirectTestOutputToFile>false</redirectTestOutputToFile>
-                    <printSummary>true</printSummary>
-                    <reportFormat>brief</reportFormat>
-                    <forkCount>1</forkCount>
-                    <reuseForks>true</reuseForks>
-                    <includes>
-                        <include>**/*Test.java</include>
-                        <include>**/*Tests.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.demo.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
         </plugins>
     </build>
